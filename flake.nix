@@ -22,15 +22,15 @@
 
     forEachPkgs = f: forEachSystem (sys: f nixpkgs.legacyPackages.${sys});
   in {
-    overlays.seix = import ./overlay.nix;
-    overlays.default = self.overlays.seix;
+    overlays.senix = import ./overlay.nix;
+    overlays.default = self.overlays.senix;
 
-    nixosModules.seix = import ./module.nix;
-    nixosModules.default = self.nixosModules.seix;
+    nixosModules.senix = import ./module.nix;
+    nixosModules.default = self.nixosModules.senix;
 
-    nixosTests.selinux = import ./tests/selinux.nix {
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    nixosTests.selinux = forEachPkgs (pkgs: (import ./tests/selinux.nix {
+      inherit pkgs;
       inherit self;
-    };
+    }));
   };
 }
